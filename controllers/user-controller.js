@@ -249,6 +249,9 @@ const userController = {
           ],
           [
             sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Followship.followingId)'), 'avatar'
+          ],
+          [
+            sequelize.literal('(SELECT introduction FROM Users WHERE Users.id = Followship.followingId)'), 'introduction'
           ]
         ],
         order: [['createdAt', 'DESC']],
@@ -266,7 +269,8 @@ const userController = {
       const currentUserFollowingIds = currentUserFollowingList.map(f => f.followingId)
       const followingsData = followings.map(following => ({
         ...following,
-        isFollowing: currentUserFollowingIds.some(id => id === following.followingId)
+        isFollowing: currentUserFollowingIds.some(id => id === following.followingId),
+        followId: following.followingId
       }))
 
       res.status(200).json(followingsData)
@@ -288,6 +292,9 @@ const userController = {
           ],
           [
             sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Followship.followerId)'), 'avatar'
+          ],
+          [
+            sequelize.literal('(SELECT introduction FROM Users WHERE Users.id = Followship.followerId)'), 'introduction'
           ]
         ],
         order: [['createdAt', 'DESC']],
@@ -305,7 +312,8 @@ const userController = {
       const currentUserFollowingIds = currentUserFollowingList.map(f => f.followingId)
       const followersData = followers.map(follower => ({
         ...follower,
-        isFollowing: currentUserFollowingIds.some(id => id === follower.followerId)
+        isFollowing: currentUserFollowingIds.some(id => id === follower.followerId),
+        followId: follower.followerId
       }))
 
       res.status(200).json(followersData)
