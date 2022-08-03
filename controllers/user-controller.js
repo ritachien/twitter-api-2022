@@ -256,20 +256,15 @@ const userController = {
         ],
         order: [['createdAt', 'DESC']],
         raw: true,
-        next: true
+        nest: true
       })
       if (!followings.length) res.status(404).json({ status: 'error', message: 'No followings found.' })
 
       // check if the current user is following the user (add attribute "isFollowing" in followings)
-      const currentUserId = Number(helpers.getUser(req).id)
-      const currentUserFollowingList = await Followship.findAll({
-        where: { followerId: currentUserId },
-        raw: true
-      })
-      const currentUserFollowingIds = currentUserFollowingList.map(f => f.followingId)
+      const currentUserFollowingIds = helpers.getUser(req).Followings.map(f => f.id)
       const followingsData = followings.map(following => ({
         ...following,
-        isFollowing: currentUserFollowingIds.some(id => id === following.followingId),
+        isFollowing: currentUserFollowingIds.includes(following.followingId),
         followId: following.followingId
       }))
 
@@ -299,20 +294,15 @@ const userController = {
         ],
         order: [['createdAt', 'DESC']],
         raw: true,
-        next: true
+        nest: true
       })
       if (!followers.length) res.status(404).json({ status: 'error', message: 'No followers found.' })
 
       // check if the current user is following the user (add attribute "isFollowing" in followings)
-      const currentUserId = Number(helpers.getUser(req).id)
-      const currentUserFollowingList = await Followship.findAll({
-        where: { followerId: currentUserId },
-        raw: true
-      })
-      const currentUserFollowingIds = currentUserFollowingList.map(f => f.followingId)
+      const currentUserFollowingIds = helpers.getUser(req).Followings.map(f => f.id)
       const followersData = followers.map(follower => ({
         ...follower,
-        isFollowing: currentUserFollowingIds.some(id => id === follower.followerId),
+        isFollowing: currentUserFollowingIds.includes(follower.followerId),
         followId: follower.followerId
       }))
 
