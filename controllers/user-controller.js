@@ -354,26 +354,26 @@ const userController = {
       // check if the password and checkPassword are the same
       if (password !== checkPassword) return res.status(401).json({ status: 'error', message: 'Password and checkPassword are not same.' })
 
-      // // check if the user uploads new files. If yes, handle the image with the helper and get the link(str)
-      // const { file } = req
-      // let avatar = file.avatar || null
-      // if (avatar) {
-      //   avatar = await imgurFileHandler(avatar[0])
-      // }
-      // let cover = file?.cover || null
-      // if (cover) {
-      //   cover = await imgurFileHandler(cover[0])
-      // }
-      // console.log('a:', avatar)
+      // check if the user uploads new files. If yes, handle the image with the helper and get the link(str)
+      const { file } = req
+      let avatar = file.avatar || null
+      if (avatar) {
+        avatar = await imgurFileHandler(avatar[0])
+      }
+      let cover = file?.cover || null
+      if (cover) {
+        cover = await imgurFileHandler(cover[0])
+      }
+
       // update user data (expect for avatar and cover images)
       const updatedUser = await user.update({
         name: name || user.name,
         account: account || user.account,
         email: email || user.email,
         password: password ? bcrypt.hashSync(password, 10) : user.password,
-        introduction: introduction || user.introduction
-        // avatar: avatar || user.avatar,
-        // cover: cover || user.cover
+        introduction: introduction || user.introduction,
+        avatar: avatar || user.avatar,
+        cover: cover || user.cover
       })
       const data = updatedUser.toJSON()
       delete data.password
