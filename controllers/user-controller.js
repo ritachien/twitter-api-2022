@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const sequelize = require('sequelize')
 const imgurFileHandler = require('../helpers/file-helper')
 const helpers = require('../_helpers')
+const validator = require('validator')
 const { User, Tweet, Like, Reply, Followship } = require('../models')
 
 const userController = {
@@ -58,6 +59,13 @@ const userController = {
         return res.status(400).json({
           status: 'error',
           message: 'All fields required.'
+        })
+      }
+
+      if (!validator.isEmail(email)) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Invalid email address.'
         })
       }
 
@@ -368,13 +376,15 @@ const userController = {
         return res.status(200).json(data)
       }
 
-      // check if email or account is changed. If yes, check if the new email or account has been registered
+      // check if email or account is changed. If yes, check if the new email is valid and not registered
       if (email) {
+        if (!validator.isEmail(email)) return res.status(400).json({ status: 'error', message: 'Invalid email address.' })
         if (email !== user.email) {
           const emailExist = await User.findOne({ where: { email } })
           if (emailExist) return res.status(401).json({ status: 'error', message: 'The email is registered.' })
         }
       }
+      // check if the account is changed. If yes, check if the new account has been registered
       if (account) {
         if (account !== user.account) {
           const accountExist = await User.findOne({ where: { account } })
