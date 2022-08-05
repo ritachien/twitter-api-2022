@@ -6,6 +6,7 @@ const faker = require('faker')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // create 10 more seed users besides root and user1
+    // Avatar API used in seeder only valid while img= 1 to 70
     const users = []
     for (let i = 0; i < 10; i++) {
       users.push({
