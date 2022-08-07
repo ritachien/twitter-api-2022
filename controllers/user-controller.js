@@ -355,8 +355,8 @@ const userController = {
       if (!id) return res.status(401).json({ status: 'error', message: 'Id number is not found in url request' })
 
       // check if the profile belongs to current user
-      const currentUserId = Number(helpers.getUser(req).id)
-      if (id !== currentUserId) return res.status(400).json({ status: 'error', message: "Can not edit other's profile" })
+      const currentUser = helpers.getUser(req)
+      if (id !== currentUser.id) return res.status(400).json({ status: 'error', message: "Can not edit other's profile" })
 
       // get the user instance (full data, including hashed password)
       const user = await User.findByPk(id)
