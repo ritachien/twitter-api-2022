@@ -48,7 +48,7 @@ const tweetController = {
   getTweets: async (req, res, next) => {
     try {
       // Get query for pagination(optional)
-      const limit = Number(req.query.count) || 10
+      const limit = Number(req.query.count) || null
       const offset = (Number(req.query.page) - 1) * limit || null
 
       // get all tweets and its reply and like number
