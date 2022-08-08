@@ -89,6 +89,7 @@ const followController = {
       const rankData = await User.findAll({
         limit,
         offset,
+        raw: true,
         where: { role: 'user' },
         order: [[sequelize.literal('followersCount'), 'DESC']],
         attributes: [
