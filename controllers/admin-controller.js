@@ -59,10 +59,11 @@ const adminController = {
       const usersData = await User.findAll({
         limit,
         offset,
+        include: [{ model: Tweet, attributes: [] }],
         attributes: [
           'id', 'account', 'name', 'avatar', 'cover',
           [
-            sequelize.literal('(SELECT COUNT(*) FROM Tweets WHERE Tweets.UserId = User.id)'),
+            sequelize.fn('COUNT', sequelize.col('Tweets.UserId')),
             'tweetCount'
           ],
           [
@@ -81,7 +82,8 @@ const adminController = {
             'followerCount'
           ]
         ],
-        order: [[sequelize.literal('tweetCount'), 'DESC']]
+        order: [[sequelize.literal('tweetCount'), 'DESC']],
+        group: ['User.id']
       })
 
       return res.status(200).json(usersData)
